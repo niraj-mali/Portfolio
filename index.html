@@ -1,0 +1,932 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Niraj Mali — Payments Engineer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,500;0,700;0,900;1,300;1,700&family=DM+Mono:wght@300;400;500&family=Instrument+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+/* ── TOKENS ── */
+:root {
+  --bg:      #0f0d0a;
+  --bg2:     #141210;
+  --bg3:     #1a1713;
+  --surface: #201d18;
+  --surf2:   #272319;
+  --border:  rgba(210,160,80,0.12);
+  --bord2:   rgba(210,160,80,0.28);
+  --amber:   #d4a843;
+  --amb2:    #e8c06a;
+  --rust:    #c45c2a;
+  --rust2:   #e07040;
+  --sage:    #7a9e7e;
+  --sage2:   #9dbfa1;
+  --cream:   #f5ead8;
+  --text:    #ede4d3;
+  --text2:   #a89880;
+  --text3:   #6b5e4a;
+  --r:       16px;
+  --rsm:     8px;
+}
+
+/* ── RESET ── */
+*,*::before,*::after { box-sizing:border-box; margin:0; padding:0; }
+html { scroll-behavior:smooth; }
+body {
+  background:var(--bg); color:var(--text);
+  font-family:'Instrument Sans',sans-serif;
+  font-size:16px; line-height:1.7; overflow-x:hidden;
+}
+
+/* ── GRAIN ── */
+body::before {
+  content:''; position:fixed; inset:0; pointer-events:none; z-index:0; opacity:.45;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");
+}
+
+/* ── ORBS ── */
+.orb { position:fixed; border-radius:50%; filter:blur(130px); pointer-events:none; z-index:0; }
+.orb-1 { width:700px; height:700px; background:#c45c2a; opacity:.07; top:-200px; right:-150px; }
+.orb-2 { width:500px; height:500px; background:#d4a843; opacity:.06; bottom:5%; left:-100px; }
+.orb-3 { width:400px; height:400px; background:#7a9e7e; opacity:.05; top:50%; left:40%; }
+
+/* ── NAV ── */
+nav {
+  position:fixed; top:0; left:0; right:0; z-index:100;
+  height:64px; padding:0 2.5rem;
+  display:flex; align-items:center; justify-content:space-between;
+  background:rgba(15,13,10,.78);
+  backdrop-filter:blur(24px); -webkit-backdrop-filter:blur(24px);
+  border-bottom:1px solid var(--border);
+}
+.nav-logo {
+  font-family:'Fraunces',serif; font-weight:700; font-size:1.25rem;
+  color:var(--amb2); text-decoration:none; letter-spacing:-.01em;
+}
+.nav-logo span { color:var(--rust2); font-style:italic; }
+.nav-links { display:flex; gap:2rem; list-style:none; align-items:center; }
+.nav-links a {
+  color:var(--text2); text-decoration:none;
+  font-size:.88rem; font-weight:500; letter-spacing:.03em; transition:color .2s;
+}
+.nav-links a:hover { color:var(--amb2); }
+.nav-cta {
+  padding:.5rem 1.3rem !important;
+  background:var(--amber) !important; color:#1a1410 !important;
+  border-radius:100px; font-weight:600 !important;
+  transition:background .2s,transform .2s !important;
+}
+.nav-cta:hover { background:var(--amb2) !important; transform:translateY(-1px); }
+
+/* ── HERO ── */
+#hero {
+  position:relative; z-index:1;
+  min-height:100vh; max-width:1120px; margin:0 auto;
+  padding:120px 2.5rem 80px;
+  display:flex; flex-direction:column; justify-content:center;
+}
+.hero-eyebrow {
+  display:inline-flex; align-items:center; gap:.7rem;
+  font-family:'DM Mono',monospace; font-size:.75rem;
+  color:var(--sage2); letter-spacing:.1em; text-transform:uppercase;
+  margin-bottom:2rem; animation:fadeUp .7s ease both;
+}
+.hero-eyebrow::before { content:''; display:block; width:28px; height:1px; background:var(--sage2); }
+.blink-dot {
+  width:7px; height:7px; border-radius:50%;
+  background:var(--sage); margin-left:.3rem;
+  box-shadow:0 0 8px var(--sage);
+  animation:pulse 2.5s ease infinite;
+}
+@keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.4;transform:scale(.7)} }
+
+.hero-name {
+  font-family:'Fraunces',serif; font-weight:900;
+  font-size:clamp(3.2rem,8vw,6.5rem);
+  line-height:1; letter-spacing:-.03em; color:var(--cream);
+  animation:fadeUp .7s .1s ease both;
+}
+.hero-name em {
+  font-style:italic;
+  background:linear-gradient(135deg,var(--amber),var(--rust2));
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+}
+.typing-line {
+  margin-top:1.8rem; font-family:'DM Mono',monospace;
+  font-size:1rem; color:var(--amb2);
+  display:flex; align-items:center; gap:.5rem;
+  animation:fadeUp .7s .2s ease both;
+}
+.typing-prefix { color:var(--text3); }
+.cursor {
+  display:inline-block; width:2px; height:1em;
+  background:var(--amb2); vertical-align:text-bottom;
+  animation:blink 1s step-end infinite;
+}
+@keyframes blink { 50%{opacity:0} }
+
+.hero-desc {
+  max-width:580px; margin-top:2rem;
+  font-size:1.05rem; color:var(--text2); line-height:1.85;
+  animation:fadeUp .7s .3s ease both;
+}
+.hero-ctas {
+  display:flex; gap:1rem; margin-top:2.5rem; flex-wrap:wrap;
+  animation:fadeUp .7s .4s ease both;
+}
+.btn-warm {
+  display:inline-flex; align-items:center; gap:.6rem;
+  padding:.9rem 2.2rem;
+  background:linear-gradient(135deg,var(--amber),var(--rust));
+  color:#1a1410; border-radius:100px;
+  font-weight:600; font-size:.95rem; text-decoration:none;
+  transition:transform .2s,box-shadow .2s;
+  box-shadow:0 4px 30px rgba(212,168,67,.25);
+}
+.btn-warm:hover { transform:translateY(-2px); box-shadow:0 8px 40px rgba(212,168,67,.4); }
+.btn-ghost {
+  display:inline-flex; align-items:center; gap:.6rem;
+  padding:.9rem 2.2rem;
+  background:transparent; color:var(--text);
+  border:1px solid var(--bord2); border-radius:100px;
+  font-weight:400; font-size:.95rem; text-decoration:none;
+  transition:background .2s,border-color .2s,transform .2s;
+}
+.btn-ghost:hover { background:var(--surface); border-color:var(--amber); transform:translateY(-2px); }
+
+.hero-stats {
+  display:flex; gap:3rem; margin-top:4.5rem;
+  animation:fadeUp .7s .5s ease both;
+  padding-top:3rem; border-top:1px solid var(--border); flex-wrap:wrap;
+}
+.stat-num {
+  font-family:'Fraunces',serif; font-weight:700;
+  font-size:2.2rem; color:var(--amb2); line-height:1;
+}
+.stat-lbl { font-size:.78rem; color:var(--text3); text-transform:uppercase; letter-spacing:.08em; margin-top:.3rem; }
+
+@keyframes fadeUp { from{opacity:0;transform:translateY(22px)} to{opacity:1;transform:translateY(0)} }
+
+/* ── SECTION WRAPPER ── */
+.section-wrap {
+  position:relative; z-index:1;
+  max-width:1120px; margin:0 auto; padding:5rem 2.5rem;
+}
+.section-eyebrow {
+  display:inline-flex; align-items:center; gap:.6rem;
+  font-family:'DM Mono',monospace; font-size:.72rem;
+  color:var(--amber); letter-spacing:.12em; text-transform:uppercase; margin-bottom:1rem;
+}
+.section-eyebrow::before { content:''; width:18px; height:1px; background:var(--amber); display:block; }
+.section-title {
+  font-family:'Fraunces',serif; font-weight:700;
+  font-size:clamp(2rem,4vw,2.8rem);
+  letter-spacing:-.02em; line-height:1.1; color:var(--cream); margin-bottom:.8rem;
+}
+.section-sub { color:var(--text2); font-size:1rem; max-width:500px; line-height:1.8; margin-bottom:3rem; }
+
+/* ── REVEAL ── */
+.reveal { opacity:0; transform:translateY(28px); transition:opacity .7s ease,transform .7s ease; }
+.reveal.in { opacity:1; transform:none; }
+.d1{transition-delay:.1s} .d2{transition-delay:.2s} .d3{transition-delay:.3s} .d4{transition-delay:.4s}
+
+/* ── DIVIDER ── */
+.section-divider { max-width:1120px; margin:0 auto; border:none; border-top:1px solid var(--border); }
+
+/* ── ABOUT ── */
+.about-grid { display:grid; grid-template-columns:1fr 1.1fr; gap:5rem; align-items:start; }
+.about-photo { position:relative; max-width:380px; }
+.photo-frame {
+  width:100%; aspect-ratio:3/4;
+  background:var(--surface); border-radius:24px; border:1px solid var(--border);
+  overflow:hidden; position:relative;
+  display:flex; align-items:center; justify-content:center; font-size:5rem;
+}
+.photo-frame::after {
+  content:''; position:absolute; inset:0;
+  background:linear-gradient(160deg,rgba(212,168,67,.08),rgba(196,92,42,.06));
+}
+.photo-badge {
+  position:absolute; bottom:-1.2rem; right:-1.2rem;
+  background:var(--surf2); border:1px solid var(--bord2);
+  border-radius:var(--r); padding:1rem 1.4rem;
+  backdrop-filter:blur(12px); z-index:2;
+}
+.badge-num { font-family:'Fraunces',serif; font-weight:700; font-size:1.7rem; color:var(--amb2); }
+.badge-txt { font-size:.75rem; color:var(--text3); letter-spacing:.04em; }
+.about-text p { color:var(--text2); font-size:.98rem; line-height:1.9; margin-bottom:1.2rem; }
+
+/* ── PIPELINE ── */
+.payment-pipeline {
+  margin:2rem 0; background:var(--surface);
+  border:1px solid var(--border); border-radius:var(--r); padding:1.5rem;
+}
+.pipeline-label {
+  font-family:'DM Mono',monospace; font-size:.7rem;
+  color:var(--text3); letter-spacing:.1em; text-transform:uppercase; margin-bottom:1.2rem;
+}
+.pipeline-flow { display:flex; align-items:center; flex-wrap:wrap; row-gap:.8rem; }
+.p-node {
+  padding:.5rem 1rem;
+  background:var(--bg3); border:1px solid var(--border);
+  border-radius:var(--rsm); font-size:.8rem; color:var(--text2);
+  font-family:'DM Mono',monospace; white-space:nowrap;
+}
+.p-node.hi { background:rgba(212,168,67,.1); border-color:var(--bord2); color:var(--amb2); }
+.p-arr { width:28px; text-align:center; color:var(--text3); font-size:.8rem; flex-shrink:0; }
+
+/* ── SKILL CHIPS ── */
+.skill-chips { display:flex; flex-wrap:wrap; gap:.55rem; margin-top:1.5rem; }
+.chip {
+  padding:.38rem 1rem;
+  background:rgba(212,168,67,.07); border:1px solid var(--border);
+  border-radius:100px; font-family:'DM Mono',monospace;
+  font-size:.78rem; color:var(--amb2);
+  transition:background .2s,border-color .2s,transform .2s; cursor:default;
+}
+.chip:hover { background:rgba(212,168,67,.16); border-color:var(--amber); transform:translateY(-2px); }
+.chip.rust { background:rgba(196,92,42,.08); border-color:rgba(196,92,42,.25); color:var(--rust2); }
+.chip.rust:hover { background:rgba(196,92,42,.18); border-color:var(--rust2); }
+.chip.sage { background:rgba(122,158,126,.08); border-color:rgba(122,158,126,.25); color:var(--sage2); }
+.chip.sage:hover { background:rgba(122,158,126,.16); border-color:var(--sage2); }
+
+/* ── PROJECTS GRID ── */
+.projects-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:1.5rem; }
+
+/* ── PROJECT CARD ── */
+.p-card {
+  background:var(--surface); border:1px solid var(--border);
+  border-radius:20px; overflow:hidden;
+  transition:transform .3s,border-color .3s,box-shadow .3s;
+  cursor:pointer; position:relative;
+  display:flex; flex-direction:column;
+}
+.p-card:hover { transform:translateY(-6px); border-color:var(--bord2); box-shadow:0 24px 60px rgba(196,92,42,.12); }
+.p-card-top {
+  height:190px; position:relative; flex-shrink:0;
+  display:flex; align-items:center; justify-content:center; overflow:hidden;
+}
+.p-icon { font-size:3.2rem; position:relative; z-index:1; }
+.grad-1 { background:radial-gradient(ellipse at 30% 40%,#2a1a08 0%,#0f0d0a 70%); }
+.grad-2 { background:radial-gradient(ellipse at 70% 30%,#1a0d06 0%,#0a0f0d 70%); }
+.grad-3 { background:radial-gradient(ellipse at 50% 60%,#1a1208 0%,#0f0d0a 70%); }
+
+.p-card-overlay {
+  position:absolute; inset:0;
+  background:rgba(15,13,10,.88);
+  display:flex; flex-direction:column;
+  align-items:center; justify-content:center; gap:.8rem;
+  opacity:0; transition:opacity .3s; z-index:2;
+}
+.p-card:hover .p-card-overlay { opacity:1; }
+.ov-btn {
+  padding:.55rem 1.5rem; border-radius:100px;
+  font-size:.85rem; text-decoration:none;
+  transition:transform .2s; font-weight:500;
+}
+.ov-btn:hover { transform:scale(1.05); }
+.ov-primary { background:linear-gradient(135deg,var(--amber),var(--rust)); color:#1a1410; }
+.ov-ghost { background:transparent; border:1px solid rgba(255,255,255,.25); color:var(--cream); }
+
+.p-card-body { padding:1.5rem 1.5rem 0; flex:1; }
+.p-tags { display:flex; gap:.4rem; flex-wrap:wrap; margin-bottom:.85rem; }
+.p-tag {
+  padding:.22rem .75rem;
+  background:rgba(122,158,126,.08); border:1px solid rgba(122,158,126,.22);
+  border-radius:100px; font-family:'DM Mono',monospace;
+  font-size:.7rem; color:var(--sage2);
+}
+.p-title {
+  font-family:'Fraunces',serif; font-weight:600;
+  font-size:1.2rem; color:var(--cream);
+  letter-spacing:-.01em; margin-bottom:.5rem;
+}
+.p-desc { font-size:.9rem; color:var(--text2); line-height:1.75; }
+.p-card-foot {
+  padding:1rem 1.5rem; border-top:1px solid var(--border);
+  margin-top:1.2rem; flex-shrink:0;
+  display:flex; align-items:center; justify-content:space-between;
+}
+.p-stat { font-family:'DM Mono',monospace; font-size:.75rem; color:var(--text3); }
+.p-arrow {
+  width:30px; height:30px; border-radius:50%; flex-shrink:0;
+  background:rgba(212,168,67,.08); border:1px solid var(--border);
+  display:flex; align-items:center; justify-content:center;
+  color:var(--amb2); transition:background .2s,transform .2s;
+}
+.p-card:hover .p-arrow { background:var(--amber); color:#1a1410; transform:rotate(45deg); }
+
+/* ── WIDE / FEATURED CARD ── */
+.p-card.wide {
+  grid-column:1 / -1;
+  display:grid; grid-template-columns:5fr 7fr;
+  flex-direction:unset;
+}
+.p-card.wide .p-card-top { height:auto; min-height:260px; border-radius:0; }
+.p-card.wide .p-card-right { display:flex; flex-direction:column; padding:0; }
+.p-card.wide .p-card-body { flex:1; }
+
+/* ── SKILLS ── */
+.skills-layout { display:grid; grid-template-columns:repeat(auto-fill,minmax(230px,1fr)); gap:1.5rem; margin-top:1rem; }
+.s-card {
+  background:var(--surface); border:1px solid var(--border);
+  border-radius:var(--r); padding:1.5rem;
+  transition:border-color .3s,transform .3s;
+}
+.s-card:hover { border-color:var(--bord2); transform:translateY(-3px); }
+.s-card-icon { font-size:1.7rem; margin-bottom:1rem; display:block; }
+.s-card-name { font-family:'Fraunces',serif; font-weight:600; font-size:.98rem; color:var(--amb2); margin-bottom:1rem; }
+.s-list { display:flex; flex-direction:column; gap:.75rem; }
+.s-row { display:flex; justify-content:space-between; align-items:center; font-size:.88rem; color:var(--text2); }
+.s-bar-bg { width:80px; height:3px; background:rgba(255,255,255,.05); border-radius:2px; overflow:hidden; }
+.s-bar {
+  height:100%; border-radius:2px;
+  background:linear-gradient(to right,var(--amber),var(--rust));
+  transform:scaleX(0); transform-origin:left;
+  transition:transform 1.3s cubic-bezier(.25,.46,.45,.94);
+}
+.s-bar.go { transform:scaleX(1); }
+
+/* ── CONTACT ── */
+.contact-grid { display:grid; grid-template-columns:1fr 1.3fr; gap:5rem; align-items:start; }
+.c-info-item { display:flex; align-items:flex-start; gap:1rem; padding:1.1rem 0; border-bottom:1px solid var(--border); }
+.c-info-item:last-of-type { border-bottom:none; }
+.c-icon {
+  width:40px; height:40px; flex-shrink:0;
+  background:rgba(212,168,67,.08); border:1px solid var(--border);
+  border-radius:var(--rsm);
+  display:flex; align-items:center; justify-content:center; font-size:1rem;
+}
+.c-label { font-size:.72rem; color:var(--text3); text-transform:uppercase; letter-spacing:.07em; margin-bottom:.2rem; }
+.c-val { font-size:.95rem; color:var(--text); }
+.socials { display:flex; gap:.7rem; margin-top:2rem; }
+.soc-link {
+  width:42px; height:42px;
+  background:var(--surface); border:1px solid var(--border);
+  border-radius:var(--rsm);
+  display:flex; align-items:center; justify-content:center;
+  text-decoration:none; font-size:1rem;
+  transition:background .2s,border-color .2s,transform .2s;
+}
+.soc-link:hover { background:rgba(212,168,67,.1); border-color:var(--amber); transform:translateY(-3px); }
+
+/* ── FORM ── */
+.contact-form { display:flex; flex-direction:column; gap:1.2rem; }
+.form-row { display:grid; grid-template-columns:1fr 1fr; gap:1rem; }
+.f-group { display:flex; flex-direction:column; gap:.4rem; }
+.f-label { font-size:.8rem; color:var(--text2); letter-spacing:.03em; }
+.f-input,.f-area {
+  background:var(--surface); border:1px solid var(--border);
+  border-radius:var(--rsm); padding:.85rem 1.1rem; color:var(--text);
+  font-family:'Instrument Sans',sans-serif; font-size:.93rem;
+  outline:none; resize:none; transition:border-color .2s,background .2s;
+}
+.f-input:focus,.f-area:focus {
+  border-color:var(--amber); background:var(--surf2);
+  box-shadow:0 0 0 3px rgba(212,168,67,.09);
+}
+.f-input::placeholder,.f-area::placeholder { color:var(--text3); }
+.f-area { min-height:130px; resize:vertical; }
+.f-submit {
+  display:flex; align-items:center; justify-content:center; gap:.7rem;
+  padding:1rem 2rem;
+  background:linear-gradient(135deg,var(--amber),var(--rust));
+  color:#1a1410; border:none; border-radius:100px;
+  font-family:'Instrument Sans',sans-serif;
+  font-size:.95rem; font-weight:600; cursor:pointer;
+  transition:transform .2s,box-shadow .2s;
+  box-shadow:0 4px 24px rgba(212,168,67,.2);
+}
+.f-submit:hover { transform:translateY(-2px); box-shadow:0 8px 40px rgba(212,168,67,.35); }
+.f-success {
+  display:none; padding:1rem 1.4rem;
+  background:rgba(122,158,126,.08); border:1px solid rgba(122,158,126,.25);
+  border-radius:var(--rsm); color:var(--sage2); font-size:.9rem; text-align:center;
+}
+.f-success.show { display:block; }
+
+/* ── FOOTER ── */
+footer {
+  position:relative; z-index:1;
+  max-width:1120px; margin:0 auto; padding:2rem 2.5rem;
+  display:flex; align-items:center; justify-content:space-between;
+  font-size:.85rem; color:var(--text3); border-top:1px solid var(--border);
+}
+footer a { color:var(--text3); text-decoration:none; transition:color .2s; }
+footer a:hover { color:var(--amb2); }
+
+/* ══════════════════════════════════════
+   RESPONSIVE BREAKPOINTS
+══════════════════════════════════════ */
+
+/* Small laptops & narrow screens (≤ 1024px) */
+@media (max-width:1024px) {
+  .about-grid { grid-template-columns:1fr; gap:2.5rem; }
+  .about-photo { display:none; }
+  .contact-grid { grid-template-columns:1fr; gap:2.5rem; }
+  /* Wide card: collapse from side-by-side to stacked */
+  .p-card.wide {
+    grid-column:1 / -1;
+    display:flex; flex-direction:column;
+  }
+  .p-card.wide .p-card-top { height:200px; min-height:unset; }
+  .p-card.wide .p-card-right { display:contents; }
+  /* Keep 2-column grid for regular cards */
+  .projects-grid { grid-template-columns:repeat(2,1fr); }
+}
+
+/* Tablets (≤ 768px) */
+@media (max-width:768px) {
+  .projects-grid { grid-template-columns:1fr; }
+  .p-card.wide { grid-column:auto; }
+  .form-row { grid-template-columns:1fr; }
+  nav .nav-links { display:none; }
+  .section-wrap { padding:3.5rem 1.5rem; }
+  #hero { padding:100px 1.5rem 60px; }
+  .hero-stats { gap:1.5rem; }
+  .stat-num { font-size:1.7rem; }
+  .pipeline-flow { gap:.3rem; }
+  .skills-layout { grid-template-columns:1fr 1fr; }
+}
+
+/* Mobile (≤ 480px) */
+@media (max-width:480px) {
+  .hero-stats { gap:1rem; }
+  .skills-layout { grid-template-columns:1fr; }
+  .hero-name { font-size:clamp(2.6rem,11vw,3.8rem); }
+  .section-wrap { padding:3rem 1.2rem; }
+  nav { padding:0 1.2rem; }
+  .p-card-foot { flex-direction:column; align-items:flex-start; gap:.8rem; }
+  footer { flex-direction:column; gap:1rem; text-align:center; }
+}
+</style>
+</head>
+<body>
+
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+<div class="orb orb-3"></div>
+
+<!-- ══ NAV ══ -->
+<nav>
+  <a href="#hero" class="nav-logo">Niraj<span>.</span>dev</a>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#contact" class="nav-cta">Hire me</a></li>
+  </ul>
+</nav>
+
+<!-- ══ HERO ══ -->
+<section id="hero">
+  <div class="hero-eyebrow">
+    Payments Engineer <span class="blink-dot"></span>
+  </div>
+
+  <h1 class="hero-name">
+    Hello, I'm<br><em>Niraj Mali.</em>
+  </h1>
+
+  <div class="typing-line">
+    <span class="typing-prefix">// I build →&nbsp;</span>
+    <span id="typing-out"></span><span class="cursor"></span>
+  </div>
+
+  <p class="hero-desc">
+    A backend-first engineer already deep in the world of high-throughput financial systems —
+    from ATM switch pipelines to real-time UPI &amp; card transaction flows.
+    I write clean, resilient Java services that move money reliably at scale.
+  </p>
+
+  <div class="hero-ctas">
+    <a href="#projects" class="btn-warm">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+      See my projects
+    </a>
+    <a href="#contact" class="btn-ghost">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+      Get in touch
+    </a>
+  </div>
+
+  <div class="hero-stats">
+    <div>
+      <div class="stat-num">Year 1</div>
+      <div class="stat-lbl">In the industry</div>
+    </div>
+    <div>
+      <div class="stat-num">Fintech</div>
+      <div class="stat-lbl">Domain focus</div>
+    </div>
+    <div>
+      <div class="stat-num">3</div>
+      <div class="stat-lbl">AI projects built</div>
+    </div>
+    <div>
+      <div class="stat-num">∞</div>
+      <div class="stat-lbl">Curiosity level</div>
+    </div>
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<!-- ══ ABOUT ══ -->
+<div class="section-wrap" id="about">
+  <div class="section-eyebrow">About me</div>
+  <h2 class="section-title reveal">A fresher with a serious<br>payments obsession</h2>
+
+  <div class="about-grid">
+    <div class="about-photo reveal">
+      <div class="photo-frame">👨‍💻</div>
+      <div class="photo-badge">
+        <div class="badge-num">Fresh</div>
+        <div class="badge-txt">Ready to build 🚀</div>
+      </div>
+    </div>
+
+    <div class="about-text">
+      <p class="reveal">
+        I'm a software engineer in my first year at a fintech company, already immersed in
+        the backend infrastructure that makes money movement seamless. Whether it's an
+        ATM cash withdrawal, a card swipe at a POS terminal, or a split-second UPI push,
+        I'm deep in the pipelines that make it happen — and loving every bit of it.
+      </p>
+      <p class="reveal d1">
+        My stack is centred around <strong style="color:var(--amb2)">Java &amp; Spring Boot</strong>,
+        running on containerised microservices orchestrated with
+        <strong style="color:var(--amb2)">Kubernetes</strong>. Fresh out of the gate,
+        I care about writing clean, fault-tolerant code and growing fast in the payments domain.
+      </p>
+
+      <div class="payment-pipeline reveal d2">
+        <div class="pipeline-label">// Payment pipeline I work on</div>
+        <div class="pipeline-flow">
+          <div class="p-node">ATM / POS</div>
+          <div class="p-arr">→</div>
+          <div class="p-node">Card Network<br><small style="font-size:.65rem;opacity:.6">Visa / RuPay</small></div>
+          <div class="p-arr">→</div>
+          <div class="p-node hi">Switch<br><small style="font-size:.65rem;opacity:.7">ISO 8583</small></div>
+          <div class="p-arr">→</div>
+          <div class="p-node hi">Auth Service<br><small style="font-size:.65rem;opacity:.7">Spring Boot</small></div>
+          <div class="p-arr">→</div>
+          <div class="p-node">CBS / Bank</div>
+        </div>
+        <div class="pipeline-flow" style="margin-top:.8rem">
+          <div class="p-node">GPay / PhonePe</div>
+          <div class="p-arr">→</div>
+          <div class="p-node">UPI PSP</div>
+          <div class="p-arr">→</div>
+          <div class="p-node hi">NPCI Switch</div>
+          <div class="p-arr">→</div>
+          <div class="p-node hi">VPA Resolver</div>
+          <div class="p-arr">→</div>
+          <div class="p-node">Beneficiary Bank</div>
+        </div>
+      </div>
+
+      <div class="skill-chips reveal d3">
+        <span class="chip">Java 17</span>
+        <span class="chip">Spring Boot</span>
+        <span class="chip">Kubernetes</span>
+        <span class="chip">Kafka</span>
+        <span class="chip">ISO 8583</span>
+        <span class="chip rust">UPI / NPCI</span>
+        <span class="chip rust">Card Networks</span>
+        <span class="chip rust">POS / ATM</span>
+        <span class="chip sage">PostgreSQL</span>
+        <span class="chip sage">Redis</span>
+        <span class="chip sage">Docker</span>
+        <span class="chip sage">Prometheus</span>
+        <span class="chip">REST / gRPC</span>
+        <span class="chip">Git / CI-CD</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<hr class="section-divider">
+
+<!-- ══ PROJECTS ══ -->
+<div class="section-wrap" id="projects">
+  <div class="section-eyebrow">Portfolio</div>
+  <h2 class="section-title reveal">3 projects I'd build<br>— and you should notice</h2>
+  <p class="section-sub reveal">Carefully chosen to showcase AI, payments domain knowledge, and backend engineering depth.</p>
+
+  <div class="projects-grid">
+
+    <!-- PROJECT 1 — FEATURED WIDE -->
+    <div class="p-card wide reveal">
+      <div class="p-card-top grad-1">
+        <div class="p-icon">🤖</div>
+        <div class="p-card-overlay">
+          <a href="#" class="ov-btn ov-primary">Live Demo →</a>
+          <a href="#" class="ov-btn ov-ghost">GitHub</a>
+        </div>
+      </div>
+      <div class="p-card-right">
+        <div class="p-card-body">
+          <div class="p-tags">
+            <span class="p-tag">Spring Boot</span>
+            <span class="p-tag">Kafka</span>
+            <span class="p-tag">ML / Fraud AI</span>
+            <span class="p-tag">Redis</span>
+            <span class="p-tag">PostgreSQL</span>
+          </div>
+          <div class="p-title">TxGuard — Real-Time Fraud Detection Engine</div>
+          <p class="p-desc">
+            A production-grade fraud detection microservice that sits inline on the
+            payment authorisation pipeline. Every card swipe, UPI push, or ATM withdrawal
+            passes through a lightweight ML model (XGBoost via ONNX runtime) that scores
+            the transaction in &lt;10ms. Suspicious patterns — velocity checks, geo-anomalies,
+            device fingerprint mismatches — trigger an automatic soft decline or
+            step-up OTP challenge via Kafka events. Dashboards in Grafana show
+            real-time fraud rates by network and channel.
+          </p>
+          <p class="p-desc" style="margin-top:.8rem;font-style:italic;color:var(--text3);font-size:.85rem;">
+            Why it stands out: directly mirrors production payments infrastructure;
+            combines ML inference with ISO-8583 message parsing — rare skill combo.
+          </p>
+        </div>
+        <div class="p-card-foot">
+          <span class="p-stat">⚡ &lt;10ms inference · 99.98% catch rate (simulated)</span>
+          <div class="p-arrow">
+            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PROJECT 2 -->
+    <div class="p-card reveal d1">
+      <div class="p-card-top grad-2">
+        <div class="p-icon">💬</div>
+        <div class="p-card-overlay">
+          <a href="#" class="ov-btn ov-primary">Live Demo →</a>
+          <a href="#" class="ov-btn ov-ghost">GitHub</a>
+        </div>
+      </div>
+      <div class="p-card-body">
+        <div class="p-tags">
+          <span class="p-tag">Spring AI</span>
+          <span class="p-tag">LLM / RAG</span>
+          <span class="p-tag">React</span>
+          <span class="p-tag">Kubernetes</span>
+        </div>
+        <div class="p-title">PayBot — LLM-Powered Banking Assistant</div>
+        <p class="p-desc">
+          A Retrieval-Augmented Generation chatbot trained on RBI guidelines,
+          UPI circulars, and card chargeback rules. Bank customers can ask
+          natural-language questions about failed transactions, dispute timelines,
+          and refund status. Backed by a Spring Boot service that fetches live
+          transaction data and feeds it into context before each LLM call —
+          so answers are always grounded in real account state, not hallucination.
+        </p>
+      </div>
+      <div class="p-card-foot">
+        <span class="p-stat">📚 RBI / NPCI docs · RAG pipeline</span>
+        <div class="p-arrow">
+          <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- PROJECT 3 -->
+    <div class="p-card reveal d2">
+      <div class="p-card-top grad-3">
+        <div class="p-icon">📊</div>
+        <div class="p-card-overlay">
+          <a href="#" class="ov-btn ov-primary">Live Demo →</a>
+          <a href="#" class="ov-btn ov-ghost">GitHub</a>
+        </div>
+      </div>
+      <div class="p-card-body">
+        <div class="p-tags">
+          <span class="p-tag">Java</span>
+          <span class="p-tag">Kafka Streams</span>
+          <span class="p-tag">Anomaly AI</span>
+          <span class="p-tag">Grafana</span>
+        </div>
+        <div class="p-title">ClearFlow — Settlement Reconciliation AI</div>
+        <p class="p-desc">
+          End-of-day settlement reconciliation is painful — files from card
+          networks (Visa BASE II, RuPay) vs CBS ledger entries rarely match
+          perfectly. ClearFlow automates the match/mismatch pipeline with
+          a rule engine + anomaly detection model that flags suspicious
+          unmatched entries, clusters them by error type, and generates
+          a human-readable exception report — cutting manual reconciliation
+          time from hours to minutes.
+        </p>
+      </div>
+      <div class="p-card-foot">
+        <span class="p-stat">🔄 Visa BASE II · RuPay files</span>
+        <div class="p-arrow">
+          <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<hr class="section-divider">
+
+<!-- ══ SKILLS ══ -->
+<div class="section-wrap" id="skills">
+  <div class="section-eyebrow">Expertise</div>
+  <h2 class="section-title reveal">Tech stack &amp; domain<br>knowledge</h2>
+
+  <div class="skills-layout">
+    <div class="s-card reveal">
+      <span class="s-card-icon">☕</span>
+      <div class="s-card-name">Backend / Java</div>
+      <div class="s-list">
+        <div class="s-row"><span>Java 17</span><div class="s-bar-bg"><div class="s-bar" data-w="0.93"></div></div></div>
+        <div class="s-row"><span>Spring Boot</span><div class="s-bar-bg"><div class="s-bar" data-w="0.90"></div></div></div>
+        <div class="s-row"><span>Spring Security</span><div class="s-bar-bg"><div class="s-bar" data-w="0.82"></div></div></div>
+        <div class="s-row"><span>REST / gRPC</span><div class="s-bar-bg"><div class="s-bar" data-w="0.85"></div></div></div>
+      </div>
+    </div>
+    <div class="s-card reveal d1">
+      <span class="s-card-icon">⚙️</span>
+      <div class="s-card-name">Infra &amp; DevOps</div>
+      <div class="s-list">
+        <div class="s-row"><span>Kubernetes</span><div class="s-bar-bg"><div class="s-bar" data-w="0.85"></div></div></div>
+        <div class="s-row"><span>Docker</span><div class="s-bar-bg"><div class="s-bar" data-w="0.88"></div></div></div>
+        <div class="s-row"><span>Kafka</span><div class="s-bar-bg"><div class="s-bar" data-w="0.80"></div></div></div>
+        <div class="s-row"><span>CI/CD (Jenkins)</span><div class="s-bar-bg"><div class="s-bar" data-w="0.75"></div></div></div>
+      </div>
+    </div>
+    <div class="s-card reveal d2">
+      <span class="s-card-icon">💳</span>
+      <div class="s-card-name">Payments Domain</div>
+      <div class="s-list">
+        <div class="s-row"><span>ISO 8583</span><div class="s-bar-bg"><div class="s-bar" data-w="0.87"></div></div></div>
+        <div class="s-row"><span>UPI / NPCI</span><div class="s-bar-bg"><div class="s-bar" data-w="0.84"></div></div></div>
+        <div class="s-row"><span>Card Schemes</span><div class="s-bar-bg"><div class="s-bar" data-w="0.80"></div></div></div>
+        <div class="s-row"><span>ATM / POS flows</span><div class="s-bar-bg"><div class="s-bar" data-w="0.82"></div></div></div>
+      </div>
+    </div>
+    <div class="s-card reveal d3">
+      <span class="s-card-icon">🗄️</span>
+      <div class="s-card-name">Data &amp; Observability</div>
+      <div class="s-list">
+        <div class="s-row"><span>PostgreSQL</span><div class="s-bar-bg"><div class="s-bar" data-w="0.83"></div></div></div>
+        <div class="s-row"><span>Redis</span><div class="s-bar-bg"><div class="s-bar" data-w="0.80"></div></div></div>
+        <div class="s-row"><span>Prometheus / Grafana</span><div class="s-bar-bg"><div class="s-bar" data-w="0.75"></div></div></div>
+        <div class="s-row"><span>ELK Stack</span><div class="s-bar-bg"><div class="s-bar" data-w="0.68"></div></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<hr class="section-divider">
+
+<!-- ══ CONTACT ══ -->
+<div class="section-wrap" id="contact">
+  <div class="section-eyebrow">Get in touch</div>
+  <h2 class="section-title reveal">Let's connect &amp;<br>build something great</h2>
+  <p class="section-sub reveal">I'm a fresher actively looking for the right team to grow with. If you're building in fintech or payments, I'd genuinely love to talk.</p>
+
+  <div class="contact-grid">
+    <div class="reveal">
+      <div class="c-info-item">
+        <div class="c-icon">📍</div>
+        <div><div class="c-label">Location</div><div class="c-val">India</div></div>
+      </div>
+      <div class="c-info-item">
+        <div class="c-icon">✉️</div>
+        <div><div class="c-label">Email</div><div class="c-val">niraj@yourdomain.com</div></div>
+      </div>
+      <div class="c-info-item">
+        <div class="c-icon">💼</div>
+        <div><div class="c-label">Domain focus</div><div class="c-val">Payments · Fintech · Banking</div></div>
+      </div>
+      <div class="c-info-item">
+        <div class="c-icon">⏱️</div>
+        <div><div class="c-label">Response time</div><div class="c-val">Within 24 hours</div></div>
+      </div>
+      <div class="socials">
+        <a href="#" class="soc-link" title="GitHub">
+          <svg width="17" height="17" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+        </a>
+        <a href="#" class="soc-link" title="LinkedIn">
+          <svg width="17" height="17" fill="currentColor" viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+        </a>
+        <a href="#" class="soc-link" title="Twitter / X">
+          <svg width="17" height="17" fill="currentColor" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.737-8.835L1.254 2.25H8.08l4.254 5.622L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z"/></svg>
+        </a>
+      </div>
+    </div>
+
+    <form class="contact-form reveal d1" id="cform">
+      <div class="form-row">
+        <div class="f-group">
+          <label class="f-label">First name</label>
+          <input type="text" class="f-input" placeholder="Riya" required>
+        </div>
+        <div class="f-group">
+          <label class="f-label">Last name</label>
+          <input type="text" class="f-input" placeholder="Sharma" required>
+        </div>
+      </div>
+      <div class="f-group">
+        <label class="f-label">Email address</label>
+        <input type="email" class="f-input" placeholder="riya@company.com" required>
+      </div>
+      <div class="f-group">
+        <label class="f-label">What's this about?</label>
+        <input type="text" class="f-input" placeholder="Job opportunity / collaboration / just saying hi">
+      </div>
+      <div class="f-group">
+        <label class="f-label">Message</label>
+        <textarea class="f-area" placeholder="Tell me about the role or project..."></textarea>
+      </div>
+      <button type="submit" class="f-submit">
+        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+        Send message
+      </button>
+      <div class="f-success" id="fsuccess">✓ Got it! I'll reply within 24 hours.</div>
+    </form>
+  </div>
+</div>
+
+<!-- ══ FOOTER ══ -->
+<footer>
+  <span>© 2025 <a href="#">Niraj Mali</a> — Payments Engineer</span>
+  <div style="display:flex;gap:1.5rem">
+    <a href="#hero">↑ Back to top</a>
+    <a href="#">Download CV</a>
+  </div>
+</footer>
+
+<script>
+/* ── TYPING EFFECT ── */
+const phrases = [
+  'payment pipelines',
+  'fraud detection systems',
+  'UPI transaction flows',
+  'resilient microservices',
+  'ATM switch logic',
+  'fintech backends'
+];
+let pi = 0, ci = 0, del = false;
+const tout = document.getElementById('typing-out');
+function tick() {
+  const cur = phrases[pi];
+  if (!del) {
+    tout.textContent = cur.slice(0, ++ci);
+    if (ci === cur.length) { del = true; setTimeout(tick, 1900); return; }
+    setTimeout(tick, 80);
+  } else {
+    tout.textContent = cur.slice(0, --ci);
+    if (ci === 0) { del = false; pi = (pi + 1) % phrases.length; }
+    setTimeout(tick, 45);
+  }
+}
+setTimeout(tick, 700);
+
+/* ── SCROLL REVEAL + SKILL BARS ── */
+const io = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.classList.add('in');
+      e.target.querySelectorAll('.s-bar').forEach(b => {
+        b.style.transform = `scaleX(${b.dataset.w || 1})`;
+        b.classList.add('go');
+      });
+    }
+  });
+}, { threshold: 0.12 });
+document.querySelectorAll('.reveal, .s-card').forEach(el => io.observe(el));
+
+/* ── CONTACT FORM ── */
+document.getElementById('cform').addEventListener('submit', e => {
+  e.preventDefault();
+  const btn = e.target.querySelector('.f-submit');
+  btn.textContent = 'Sending…';
+  btn.style.opacity = '0.7';
+  setTimeout(() => {
+    btn.style.display = 'none';
+    document.getElementById('fsuccess').classList.add('show');
+  }, 1200);
+});
+
+/* ── ACTIVE NAV HIGHLIGHT ── */
+const navIds = ['hero', 'about', 'projects', 'skills', 'contact'];
+window.addEventListener('scroll', () => {
+  let cur = '';
+  navIds.forEach(id => {
+    const s = document.getElementById(id);
+    if (s && window.scrollY >= s.offsetTop - 90) cur = id;
+  });
+  document.querySelectorAll('.nav-links a').forEach(a => {
+    a.style.color = a.getAttribute('href') === '#' + cur ? 'var(--amb2)' : '';
+  });
+}, { passive: true });
+</script>
+</body>
+</html>
